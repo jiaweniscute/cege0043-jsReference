@@ -3,6 +3,7 @@ function startup(){
         trackAndCircle();
         getEarthquakes();
         }, false);
+    getPort();
 }
 
 
@@ -12,3 +13,4 @@ function trackAndCircle(){
     addPointLinePoly();
 
 }
+

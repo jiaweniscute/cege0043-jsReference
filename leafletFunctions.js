@@ -58,7 +58,6 @@ function removeLayers(){
 function dataResponse() {
     if (client.readyState == 4) {
         var geoJSONData = client.responseText;
-        console.log('loading data')
         loadLayer(geoJSONData);
     }
 }
