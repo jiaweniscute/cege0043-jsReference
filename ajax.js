@@ -24,3 +24,4 @@ function processDivNodeJSChange() {
             document.getElementById('ajaxtest').innerHTML = xhrNode.responseText;
     }
 }
+
