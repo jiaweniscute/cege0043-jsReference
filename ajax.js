@@ -16,12 +16,12 @@ function callDivNodeJSChange() {
 
 function processDivNodeJSChange() {
     if (xhrNode.readyState < 4) {
-        document.getElementById('ajaxtest').innerHTML = "Loading...";
+        document.getElementById('ajaxtext').innerHTML = "Loading...";
     }
     else if (xhrNode.readyState === 4) { // 4 = Response from server has been completely loaded.
         if (xhrNode.status == 200 && xhrNode.status < 300)
         // http status between 200 to 299 are all successful
-            document.getElementById('ajaxtest').innerHTML = xhrNode.responseText;
+            document.getElementById('ajaxtext').innerHTML = xhrNode.responseText;
     }
 }
 
