@@ -32,7 +32,6 @@ function startDataUpload() {
     postString = postString + "&latitude=" + latitude + "&longitude=" +
         longitude;
 
-    alert(postString)
     processData(postString);
 }
 
@@ -40,13 +39,15 @@ function startDataUpload() {
 var client;  // the global variable that holds the request
 function processData(postString) {
     client = new XMLHttpRequest();
-    client.open('POST', 'http://developer.cege.ucl.ac.uk:30250/reflectData', true);
-    console.log('open post request');
-    client.onreadystatechange = dataUploaded();
-    console.log('sending data')
+    client.open('POST', 'http://developer.cege.ucl.ac.uk:'+ httpPortNumber+ '/reflectData', true);
+    client.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    client.onreadystatechange = dataUploaded;
     client.send(postString);
-    console.log('client does POST request');
 }
+
+
+
+
 
 // create the code to wait for the response from the data server, and process the response once it is received
 function dataUploaded() {
