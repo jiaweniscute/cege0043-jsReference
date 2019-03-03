@@ -35,6 +35,7 @@ function startDataUpload() {
     processData(postString);
 }
 
+// post data to server route: /uploadData
 
 var client;  // the global variable that holds the request
 function processData(postString) {
@@ -54,6 +55,7 @@ function dataUploaded() {
     if (client.readyState == 4) {
         // change the DIV to show the response
         document.getElementById("dataUploadResult").innerHTML = client.responseText;
+        //document.getElementById('mapcontainer').innerHTML ='<div id="mapid"></div>';
 
     }
 }
