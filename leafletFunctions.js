@@ -73,9 +73,13 @@ var client;
 function getFormData() {
     console.log('getFormData called',httpPortNumber);
     client = new XMLHttpRequest();
+<<<<<<< HEAD
     //var url = "http://developer.cege.ucl.ac.uk:" + httpPortNumber + '/getFormData/' + httpPortNumber;
     var url = "http://developer.cege.ucl.ac.uk:" + httpPortNumber + '/getFormData/' + httpPortNumber;
 
+=======
+    var url = "http://developer.cege.ucl.ac.uk:" + httpPortNumber + '/getFormData/' + httpPortNumber;
+>>>>>>> 965d871af7c1ebecffe8557c4333009ebc13ff88
     console.log('url:', url)
     client.open("GET", url, true);
     client.onreadystatechange = processFormData;
