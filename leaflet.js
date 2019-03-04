@@ -1,6 +1,7 @@
 // initialise map
 
-var mymap = L.map('mapid').setView([51.505, -0.09], 4);
+var mymap = L.map('mapid').setView([51.52452, -0.13382], 16);
+
 
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw',
     {
@@ -22,6 +23,12 @@ function onMapClick(e) {
         .setLatLng(e.latlng)
         .setContent("You clicked the map at " + e.latlng.toString())
         .openOn(mymap);
+
+    console.log('under map click')
+
+    document.getElementById("longitude").value = e.latlng.lng;
+    document.getElementById("latitude").value = e.latlng.lat;
+
 }
 
 // now add the click event detector to the map
