@@ -9,20 +9,39 @@ function startDataUpload() {
     var latitude = document.getElementById("latitude").value;
     var longitude = document.getElementById("longitude").value;
     var postString = "question_title=" + question_title + "&question_text=" + question_text +
-        "&answer_1=" + answer_1 + "&answer_2=" + answer_2 + "&answer_3=" + answer_3+ "&answer_4=" + answer_4 +
+        "&answer_1=" + answer_1 + "&answer_2=" + answer_2 + "&answer_3=" + answer_3 + "&answer_4=" + answer_4 +
         "&correct_answer=" + correct_answer + "&latitude=" + latitude + "&longitude=" + longitude;
 
-    processData(postString);
+    var all_answers = [question_title, question_text, answer_1, answer_2, answer_3, answer_4, correct_answer, latitude, longitude];
+
+    // check correct answer field, if pass, check if all fields are filled
+    if (Number.isInteger(Number(correct_answer)) == false || Number(correct_answer) == 0) {
+        document.getElementById("dataUploadResult").innerHTML = 'Error: Correct Answer Field must be an integer. '
+    }
+    else {
+        var count = 0;
+        for (var i = 0; i < all_answers.length; i++) {
+            if (all_answers[i] === "") {
+                count += 1;
+            }
+        }
+        if (count > 0) {
+            document.getElementById("dataUploadResult").innerHTML = 'Error: Some fields are empty. ';
+        }
+        else {
+            processData(postString);
+        }
+
+    }
 }
 
-// post data to server route: /uploadData
 
 var client;  // the global variable that holds the request
 function processData(postString) {
     client = new XMLHttpRequest();
     postString = postString + "&port_id=" + httpPortNumber;
-    var url = 'http://developer.cege.ucl.ac.uk:'+ httpPortNumber + "/uploadQuestion";
-    client.open('POST',url,true);
+    var url = 'http://developer.cege.ucl.ac.uk:' + httpPortNumber + "/uploadQuestion";
+    client.open('POST', url, true);
     client.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     client.onreadystatechange = dataUploaded;
     client.send(postString);
@@ -34,9 +53,9 @@ function dataUploaded() {
     // this function listens out for the server to say that the data is ready - i.e. has state 4
     if (client.readyState == 4) {
         // change the DIV to show the response
-        document.getElementById("dataUploadResult").innerHTML = client.responseText;
-
+        document.getElementById("dataUploadResult").innerHTML = 'Question added successfully.';
     }
+
 }
 
 

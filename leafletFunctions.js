@@ -36,6 +36,7 @@ function processFormData() {
     else if (client.readyState === 4) { // 4 = Response from server has been completely loaded.
         if (client.status > 199 && client.status < 300) {
             var FormData = client.responseText;
+            console.log(client.responseText);
             loadFormLayer(FormData);
         }
     }
