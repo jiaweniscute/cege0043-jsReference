@@ -9,15 +9,7 @@ function getPort() {
         httpPortNumber = doc.getElementsByTagName("node-port-http").item(0).textContent;
         httpsPortNumber = doc.getElementsByTagName("node-port-https").item(0).textContent;
         trackAndCircle();
-<<<<<<< HEAD
         getFormData();
-=======
-<<<<<<< HEAD
-        getFormData();
-=======
-        getFormData()
->>>>>>> 965d871af7c1ebecffe8557c4333009ebc13ff88
->>>>>>> a909fd87f58c1612b27d66d826ce61425c0cf25e
     });
 
 
@@ -29,13 +21,6 @@ function getPort() {
 
 
     xhr.send();
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-    console.log('in getport after send', httpPortNumber)
->>>>>>> 965d871af7c1ebecffe8557c4333009ebc13ff88
->>>>>>> a909fd87f58c1612b27d66d826ce61425c0cf25e
 
 }
 
