@@ -14,11 +14,10 @@ function startDataUpload() {
 
     var all_answers = [question_title, question_text, answer_1, answer_2, answer_3, answer_4, correct_answer, latitude, longitude];
 
+    correct_answer_integer = Number(correct_answer);
+    console.log(correct_answer_integer, typeof(correct_answer_integer))
     // check correct answer field, if pass, check if all fields are filled
-    if (Number.isInteger(Number(correct_answer)) == false || Number(correct_answer) == 0) {
-        document.getElementById("dataUploadResult").innerHTML = 'Error: Correct Answer Field must be an integer. '
-    }
-    else {
+    if (correct_answer_integer == 1 || correct_answer_integer == 2 || correct_answer_integer == 3 || correct_answer_integer == 4) {
         var count = 0;
         for (var i = 0; i < all_answers.length; i++) {
             if (all_answers[i] === "") {
@@ -29,9 +28,14 @@ function startDataUpload() {
             document.getElementById("dataUploadResult").innerHTML = 'Error: Some fields are empty. ';
         }
         else {
-            processData(postString);
+            //processData(postString);
+            console.log('data processed.')
         }
 
+    }
+    else {
+        document.getElementById("dataUploadResult").innerHTML = 'Error: Correct Answer Field must be an integer. '
+        console.log('not 1 -4')
     }
 }
 
