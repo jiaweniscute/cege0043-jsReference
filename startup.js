@@ -1,13 +1,14 @@
 function startup() {
 
     getPort();
+    trackLocation();
 
 }
 
 
 
 function trackAndCircle() {
-    trackLocation();
+
     loadW3HTML();
 
 }
