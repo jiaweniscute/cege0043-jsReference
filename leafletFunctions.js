@@ -1,80 +1,10 @@
 var client;
-var earthquakelayer;
-var mypoint;
-var mycircle;
-var mypolygon;
-var earthquakes;
-var eclient;
-
-function addPointLinePoly() {
-
-    // add a point
-    mypoint = L.marker([51.5, -0.09]).addTo(mymap)
-        .bindPopup("<b>Hello!</b><br/>I am a popup.").openPopup();
-
-    // add a circle
-    mycircle = L.circle([51.5, -0.11], 500, {
-        color: 'red',
-        fillColor: '#f03',
-        fillOpacity: 0.5
-    }).addTo(mymap).bindPopup("I am a circle")
-
-    // add a polygon (triangle)
-    mypolygon = L.polygon([
-            [51.509, -0.08],
-            [51.503, -0.06],
-            [51.51, -0.047]
-        ], {
-            color: 'red',
-            fillColor: '#f03',
-            fillOpacity: 0.5
-        }
-    ).addTo(mymap).bindPopup("I am a polygon");
-
-
-}
-
-
-// function getEarthquakes() {
-//     eclient = new XMLHttpRequest();
-//     var url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson";
-//     eclient.open('GET', url);
-//     eclient.onreadystatechange = dataResponse;
-//     eclient.send();
-//
-// }
-//
-// function removeLayers() {
-//     mymap.removeLayer(earthquakelayer);
-//     mymap.removeLayer(mypoint)
-//     mymap.removeLayer(mycircle)
-//     mymap.removeLayer(mypolygon)
-//
-//
-// }
-//
-// function dataResponse() {
-//     if (eclient.readyState == 4) {
-//         var geoJSONData = eclient.responseText;
-//         loadLayer(geoJSONData);
-//     }
-// }
-//
-// function loadLayer(geoJSONData) {
-//     var json = JSON.parse(geoJSONData);
-//     console.log('earthquake json below')
-//     console.log(json)
-//     earthquakelayer = L.geoJson(json).addTo(mymap);
-//     mymap.fitBounds(earthquakelayer.getBounds());
-// }
-
-var client;
 
 function getFormData() {
-    console.log('getFormData called',httpPortNumber);
+    console.log('getFormData called', httpPortNumber);
     client = new XMLHttpRequest();
 
-    var url = "http://developer.cege.ucl.ac.uk:" + httpPortNumber + '/getFormData/' + httpPortNumber;
+    var url = "http://developer.cege.ucl.ac.uk:" + httpPortNumber + '/getQuizPoints/' + httpPortNumber;
     console.log('url:', url)
     client.open("GET", url, true);
     client.onreadystatechange = processFormData;
@@ -100,11 +30,71 @@ function processFormData() {
     }
 }
 
+
+// var formLayer;
+// function loadFormLayer(FormData) {
+//
+//     var json = JSON.parse(FormData)[0];
+//     formLayer = L.geoJson(json).addTo(mymap);
+//     mymap.fitBounds(formLayer.getBounds());
+// }
+
+
+var formLayer;
+
 function loadFormLayer(FormData) {
 
-    var json = JSON.parse(FormData)[0];
-    var FormLayer = L.geoJson(json).addTo(mymap);
-    //mymap.fitBounds(FormLayer.getBounds());
+    var formJSON = JSON.parse(FormData)[0];
+    formLayer = L.geoJson(formJSON,
+        {
+            // use point to layer to create the points
+            pointToLayer: function (feature, latlng) {
+                // in this case, we build an HTML DIV string
+                // using the values in the data
+                var htmlString = "<DIV id='popup'" + feature.properties.id + "><h2>" + feature.properties.question_title + "</h2><br>";
+                htmlString = htmlString + "<h3>" + feature.properties.question_text + "</h3><br>";
+                htmlString = htmlString + "<input type='radio' name='answer' id = '" + feature.properties.id + "_1' />" + feature.properties.answer_1 + "<br>";
+                htmlString = htmlString + "<input type='radio' name='answer' id = '" + feature.properties.id + "_2' />" + feature.properties.answer_2 + "<br>";
+                htmlString = htmlString + "<input type='radio' name='answer' id = '" + feature.properties.id + "_3' />" + feature.properties.answer_3 + "<br>";
+                htmlString = htmlString + "<input type='radio' name='answer' id = '" + feature.properties.id + "_4' />" + feature.properties.answer_4 + "<br>";
+                htmlString = htmlString + "<button onclick='checkAnswer(" + feature.properties.id + ");return false;'>Submit Answer</button>";
+                htmlString = htmlString + "<div id=answer" + feature.properties.id + " hidden>" + feature.properties.correct_answer+ "</div>";
+                htmlString = htmlString + "</div>";
+                return L.marker(latlng).bindPopup(htmlString);
+            },
+        }).addTo(mymap);
+
+
+    mymap.fitBounds(formLayer.getBounds());
 }
 
+
+function checkAnswer(questionID) {
+
+    var answer = document.getElementById("answer" + questionID).innerHTML;
+    // now check the question radio buttons
+    var correctAnswer = false;
+    var answerSelected = 0;
+    for (var i = 1; i < 5; i++) {
+        if (document.getElementById(questionID + "_" + i).checked) {
+            answerSelected = i;
+        }
+        if ((document.getElementById(questionID + "_" + i).checked) && (i == answer)) {
+
+            alert("Well done");
+            correctAnswer = true;
+        }
+    }
+    if (correctAnswer === false) {
+        // they didn't get it right
+        alert("Better luck next time");
+    }
+    // now close the popup
+    mymap.closePopup();
+    // the code to upload the answer to the server would go here
+    // call an AJAX routine using the data
+    // the answerSelected variable holds the number of the answer
+    //that the user picked
+
+}
 
