@@ -2,7 +2,7 @@ var userMarker;
 
 var testMarkerRed = L.AwesomeMarkers.icon({
     icon: 'play',
-    markerColor: 'red'
+    markerColor: 'black'
 });
 
 // Track position
@@ -19,7 +19,7 @@ function showPosition(position) {
         mymap.removeLayer(userMarker)
     }
     userMarker = L.marker([position.coords.latitude, position.coords.longitude], {icon: testMarkerRed}).addTo(mymap)
-        .bindPopup("<b>Hello!</b><br/>This is my position");
+        .bindPopup("Your Position");
 
     closestFormPoint(position)
 

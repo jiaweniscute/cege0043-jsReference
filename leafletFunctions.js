@@ -1,8 +1,20 @@
 var client;
 
-var testMarkerBlue = L.AwesomeMarkers.icon({
+
+var blueMarker = L.AwesomeMarkers.icon({
     icon: 'play',
     markerColor: 'blue'
+});
+
+
+var greenMarker = L.AwesomeMarkers.icon({
+    icon: 'play',
+    markerColor: 'green'
+});
+
+var redMarker = L.AwesomeMarkers.icon({
+    icon: 'play',
+    markerColor: 'red'
 });
 
 
@@ -54,10 +66,10 @@ function loadFormLayer(FormData) {
                 htmlString = htmlString + "<input type='radio' name='answer' id = '" + feature.properties.id + "_2' />" + feature.properties.answer_2 + "<br>";
                 htmlString = htmlString + "<input type='radio' name='answer' id = '" + feature.properties.id + "_3' />" + feature.properties.answer_3 + "<br>";
                 htmlString = htmlString + "<input type='radio' name='answer' id = '" + feature.properties.id + "_4' />" + feature.properties.answer_4 + "<br><br>";
-                htmlString = htmlString + "<button onclick='checkAnswer(" + feature.properties.id + ");return false;'>Submit Answer</button>";
+                htmlString = htmlString + "<button onclick='checkAnswer(" + feature.properties.id + "," + latlng.lat + ","+ latlng.lng + ");return false;'>Submit Answer</button>";
                 htmlString = htmlString + "<div id=answer" + feature.properties.id + " hidden>" + feature.properties.correct_answer + "</div>";
                 htmlString = htmlString + "</div>";
-                return L.marker(latlng, {icon: testMarkerBlue}).bindPopup(htmlString);
+                return L.marker(latlng, {icon: blueMarker}).bindPopup(htmlString);
             },
         }).addTo(mymap);
 
@@ -66,7 +78,8 @@ function loadFormLayer(FormData) {
 }
 
 
-function checkAnswer(questionID) {
+function checkAnswer(questionID, lat,lng) {
+    console.log('check', lat, lng);
 
     var answer = document.getElementById("answer" + questionID).innerHTML;
     // now check the question radio buttons
@@ -77,24 +90,24 @@ function checkAnswer(questionID) {
             answerSelected = i;
         }
         if ((document.getElementById(questionID + "_" + i).checked) && (i == answer)) {
-
+            L.marker([lat,lng], {icon: greenMarker}).addTo(mymap);
             alert("Correct! Move on to the next point.");
             correctAnswer = true;
         }
     }
     if (correctAnswer === false) {
         // they didn't get it right
-        alert("Wrong! Re-do the question by clicking on the point.");
+        L.marker([lat,lng], {icon: redMarker}).addTo(mymap);
+        alert("Sorry your answer was wrong.");
     }
 
     mymap.closePopup();
 
 
-    // upload user's answer
+// upload user's answer
     var postString = "port_id=" + httpPortNumber + "&question_id=" + questionID +
         "&answer_selected=" + answerSelected + "&correct_answer=" + answer;
 
-    console.log(postString);
     processAnswer(postString)
 
 }
@@ -132,19 +145,18 @@ var answerclient;  // the global variable that holds the request
 function processAnswer(postString) {
     answerclient = new XMLHttpRequest();
     postString = postString + "&port_id=" + httpPortNumber;
-    var url = 'http://developer.cege.ucl.ac.uk:' + httpPortNumber +  "/uploadAnswer";
+    var url = 'http://developer.cege.ucl.ac.uk:' + httpPortNumber + "/uploadAnswer";
     answerclient.open('POST', url, true);
     answerclient.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     answerclient.onreadystatechange = AnswerUploaded;
     answerclient.send(postString);
-}
+}``
 
 
 // create the code to wait for the response from the data server, and process the response once it is received
 function AnswerUploaded() {
     // this function listens out for the server to say that the data is ready - i.e. has state 4
     if (answerclient.readyState == 4) {
-        // change the DIV to show the response
         console.log('answer uploaded')
     }
 }
