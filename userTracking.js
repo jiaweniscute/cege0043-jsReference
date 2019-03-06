@@ -1,5 +1,10 @@
 var userMarker;
 
+var testMarkerRed = L.AwesomeMarkers.icon({
+    icon: 'play',
+    markerColor: 'red'
+});
+
 // Track position
 function trackLocation() {
     if (navigator.geolocation) {
@@ -13,7 +18,7 @@ function showPosition(position) {
     if (userMarker) {
         mymap.removeLayer(userMarker)
     }
-    userMarker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(mymap)
+    userMarker = L.marker([position.coords.latitude, position.coords.longitude], {icon: testMarkerRed}).addTo(mymap)
         .bindPopup("<b>Hello!</b><br/>This is my position");
 
     closestFormPoint(position)

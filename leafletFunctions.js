@@ -1,12 +1,17 @@
 var client;
 
+var testMarkerBlue = L.AwesomeMarkers.icon({
+    icon: 'play',
+    markerColor: 'blue'
+});
+
 
 function getFormData() {
     console.log('getFormData called', httpPortNumber);
     client = new XMLHttpRequest();
 
     var url = "http://developer.cege.ucl.ac.uk:" + httpPortNumber + '/getQuizPoints/' + httpPortNumber;
-    console.log('url:', url)
+    console.log('url:', url);
     client.open("GET", url, true);
     client.onreadystatechange = processFormData;
     try {
@@ -52,7 +57,7 @@ function loadFormLayer(FormData) {
                 htmlString = htmlString + "<button onclick='checkAnswer(" + feature.properties.id + ");return false;'>Submit Answer</button>";
                 htmlString = htmlString + "<div id=answer" + feature.properties.id + " hidden>" + feature.properties.correct_answer + "</div>";
                 htmlString = htmlString + "</div>";
-                return L.marker(latlng).bindPopup(htmlString);
+                return L.marker(latlng, {icon: testMarkerBlue}).bindPopup(htmlString);
             },
         }).addTo(mymap);
 
@@ -81,12 +86,16 @@ function checkAnswer(questionID) {
         // they didn't get it right
         alert("Wrong! Re-do the question by clicking on the point.");
     }
-    // now close the popup
+
     mymap.closePopup();
-    // the code to upload the answer to the server would go here
-    // call an AJAX routine using the data
-    // the answerSelected variable holds the number of the answer
-    //that the user picked
+
+
+    // upload user's answer
+    var postString = "port_id=" + httpPortNumber + "&question_id=" + questionID +
+        "&answer_selected=" + answerSelected + "&correct_answer=" + answer;
+
+    console.log(postString);
+    processAnswer(postString)
 
 }
 
@@ -102,7 +111,7 @@ function closestFormPoint(position) {
 
     formLayer.eachLayer(function (layer) {
         var distance = calculateDistance(userlat, userlng, layer.getLatLng().lat, layer.getLatLng().lng, 'K');
-        console.log(distance)
+        console.log(distance);
         if (distance < dist) {
             closestFormPoint = layer.feature.properties.id;
         }
@@ -116,5 +125,27 @@ function closestFormPoint(position) {
             layer.openPopup();
         }
     });
+}
+
+
+var answerclient;  // the global variable that holds the request
+function processAnswer(postString) {
+    answerclient = new XMLHttpRequest();
+    postString = postString + "&port_id=" + httpPortNumber;
+    var url = 'http://developer.cege.ucl.ac.uk:' + httpPortNumber +  "/uploadAnswer";
+    answerclient.open('POST', url, true);
+    answerclient.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    answerclient.onreadystatechange = AnswerUploaded;
+    answerclient.send(postString);
+}
+
+
+// create the code to wait for the response from the data server, and process the response once it is received
+function AnswerUploaded() {
+    // this function listens out for the server to say that the data is ready - i.e. has state 4
+    if (answerclient.readyState == 4) {
+        // change the DIV to show the response
+        console.log('answer uploaded')
+    }
 }
 
