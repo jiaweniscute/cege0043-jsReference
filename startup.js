@@ -3,13 +3,15 @@ function startup() {
     getPort();
     trackLocation();
 
+
 }
 
 
 
 function trackAndCircle() {
-
+    getRanking();
     loadW3HTML();
+
 
 }
 

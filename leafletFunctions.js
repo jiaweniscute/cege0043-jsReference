@@ -1,11 +1,7 @@
-var client;
-
-
 var blueMarker = L.AwesomeMarkers.icon({
     icon: 'play',
     markerColor: 'blue'
 });
-
 
 var greenMarker = L.AwesomeMarkers.icon({
     icon: 'play',
@@ -17,13 +13,12 @@ var redMarker = L.AwesomeMarkers.icon({
     markerColor: 'red'
 });
 
+var client;
 
 function getFormData() {
-    console.log('getFormData called', httpPortNumber);
+    getNumCorrect();
     client = new XMLHttpRequest();
-
     var url = "http://developer.cege.ucl.ac.uk:" + httpPortNumber + '/getQuizPoints/' + httpPortNumber;
-    console.log('url:', url);
     client.open("GET", url, true);
     client.onreadystatechange = processFormData;
     try {
@@ -38,10 +33,11 @@ function processFormData() {
     // while waiting response from server
 
     if (client.readyState < 4) {
-        console.log('loading...')
+        console.log('waiting for form data')
     }
     else if (client.readyState === 4) { // 4 = Response from server has been completely loaded.
         if (client.status > 199 && client.status < 300) {
+            console.log('form data sent.')
             var FormData = client.responseText;
             loadFormLayer(FormData);
         }
@@ -52,7 +48,6 @@ function processFormData() {
 var formLayer;
 
 function loadFormLayer(FormData) {
-
     var formJSON = JSON.parse(FormData)[0];
     formLayer = L.geoJson(formJSON,
         {
@@ -66,7 +61,7 @@ function loadFormLayer(FormData) {
                 htmlString = htmlString + "<input type='radio' name='answer' id = '" + feature.properties.id + "_2' />" + feature.properties.answer_2 + "<br>";
                 htmlString = htmlString + "<input type='radio' name='answer' id = '" + feature.properties.id + "_3' />" + feature.properties.answer_3 + "<br>";
                 htmlString = htmlString + "<input type='radio' name='answer' id = '" + feature.properties.id + "_4' />" + feature.properties.answer_4 + "<br><br>";
-                htmlString = htmlString + "<button onclick='checkAnswer(" + feature.properties.id + "," + latlng.lat + ","+ latlng.lng + ");return false;'>Submit Answer</button>";
+                htmlString = htmlString + "<button onclick='checkAnswer(" + feature.properties.id + "," + latlng.lat + "," + latlng.lng + ");return false;'>Submit Answer</button>";
                 htmlString = htmlString + "<div id=answer" + feature.properties.id + " hidden>" + feature.properties.correct_answer + "</div>";
                 htmlString = htmlString + "</div>";
                 return L.marker(latlng, {icon: blueMarker}).bindPopup(htmlString);
@@ -78,9 +73,7 @@ function loadFormLayer(FormData) {
 }
 
 
-function checkAnswer(questionID, lat,lng) {
-    console.log('check', lat, lng);
-
+function checkAnswer(questionID, lat, lng) {
     var answer = document.getElementById("answer" + questionID).innerHTML;
     // now check the question radio buttons
     var correctAnswer = false;
@@ -90,27 +83,60 @@ function checkAnswer(questionID, lat,lng) {
             answerSelected = i;
         }
         if ((document.getElementById(questionID + "_" + i).checked) && (i == answer)) {
-            L.marker([lat,lng], {icon: greenMarker}).addTo(mymap);
+            L.marker([lat, lng], {icon: greenMarker}).addTo(mymap);
             alert("Correct! Move on to the next point.");
             correctAnswer = true;
         }
     }
     if (correctAnswer === false) {
         // they didn't get it right
-        L.marker([lat,lng], {icon: redMarker}).addTo(mymap);
+        L.marker([lat, lng], {icon: redMarker}).addTo(mymap);
         alert("Sorry your answer was wrong.");
     }
 
     mymap.closePopup();
 
 
-// upload user's answer
+    // upload user's answer
     var postString = "port_id=" + httpPortNumber + "&question_id=" + questionID +
         "&answer_selected=" + answerSelected + "&correct_answer=" + answer;
 
-    processAnswer(postString)
+    processAnswer(postString);
+    getNumCorrect();
 
 }
+
+var answerclient;  // the global variable that holds the request
+function processAnswer(postString) {
+    answerclient = new XMLHttpRequest();
+    var url = 'http://developer.cege.ucl.ac.uk:' + httpPortNumber + "/uploadAnswer";
+    answerclient.open('POST', url, true);
+    answerclient.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    answerclient.send(postString);
+}
+
+
+var numclient;
+var numcorrect;
+
+function getNumCorrect() {
+    console.log('getNumCorrect called')
+    numclient = new XMLHttpRequest();
+    var url = "http://developer.cege.ucl.ac.uk:" + httpPortNumber + '/numcorrect/' + httpPortNumber;
+    numclient.open('GET', url);
+    numclient.onreadystatechange = numResponse;
+    numclient.send();
+
+}
+
+function numResponse() {
+    if (numclient.readyState == 4) {
+        var prevnum = numcorrect
+        numcorrect = JSON.parse(numclient.responseText)['num_questions'];
+        document.getElementById('numcorrect').innerHTML = numcorrect;
+    }
+}
+
 
 
 function closestFormPoint(position) {
@@ -140,24 +166,4 @@ function closestFormPoint(position) {
     });
 }
 
-
-var answerclient;  // the global variable that holds the request
-function processAnswer(postString) {
-    answerclient = new XMLHttpRequest();
-    postString = postString + "&port_id=" + httpPortNumber;
-    var url = 'http://developer.cege.ucl.ac.uk:' + httpPortNumber + "/uploadAnswer";
-    answerclient.open('POST', url, true);
-    answerclient.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    answerclient.onreadystatechange = AnswerUploaded;
-    answerclient.send(postString);
-}``
-
-
-// create the code to wait for the response from the data server, and process the response once it is received
-function AnswerUploaded() {
-    // this function listens out for the server to say that the data is ready - i.e. has state 4
-    if (answerclient.readyState == 4) {
-        console.log('answer uploaded')
-    }
-}
 
