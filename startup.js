@@ -1,17 +1,16 @@
 function startup() {
 
     getPort();
-    trackLocation();
 
 
 }
 
 
-
 function trackAndCircle() {
-    getRanking();
+    getFormData();
+    trackLocation();
+    startMenu();
     loadW3HTML();
-
 
 }
 

@@ -8,7 +8,6 @@ function getPort() {
         var doc = parser.parseFromString(xhr.responseText, "application/xml");
         httpPortNumber = doc.getElementsByTagName("node-port-http").item(0).textContent;
         httpsPortNumber = doc.getElementsByTagName("node-port-https").item(0).textContent;
-        getFormData();
         trackAndCircle();
     });
 

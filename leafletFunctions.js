@@ -120,7 +120,7 @@ var numclient;
 var numcorrect;
 
 function getNumCorrect() {
-    console.log('getNumCorrect called')
+    console.log('getNumCorrect called');
     numclient = new XMLHttpRequest();
     var url = "http://developer.cege.ucl.ac.uk:" + httpPortNumber + '/numcorrect/' + httpPortNumber;
     numclient.open('GET', url);
@@ -150,7 +150,6 @@ function closestFormPoint(position) {
 
     formLayer.eachLayer(function (layer) {
         var distance = calculateDistance(userlat, userlng, layer.getLatLng().lat, layer.getLatLng().lng, 'K');
-        console.log(distance);
         if (distance < dist) {
             closestFormPoint = layer.feature.properties.id;
         }
