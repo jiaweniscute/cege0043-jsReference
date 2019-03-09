@@ -16,7 +16,6 @@ var redMarker = L.AwesomeMarkers.icon({
 var client;
 
 function getFormData() {
-    getNumCorrect();
     client = new XMLHttpRequest();
     var url = "http://developer.cege.ucl.ac.uk:" + httpPortNumber + '/getQuizPoints/' + httpPortNumber;
     client.open("GET", url, true);
@@ -33,11 +32,9 @@ function processFormData() {
     // while waiting response from server
 
     if (client.readyState < 4) {
-        console.log('waiting for form data')
     }
     else if (client.readyState === 4) { // 4 = Response from server has been completely loaded.
         if (client.status > 199 && client.status < 300) {
-            console.log('form data sent.')
             var FormData = client.responseText;
             loadFormLayer(FormData);
         }
@@ -116,29 +113,6 @@ function processAnswer(postString) {
 }
 
 
-var numclient;
-var numcorrect;
-
-function getNumCorrect() {
-    console.log('getNumCorrect called');
-    numclient = new XMLHttpRequest();
-    var url = "http://developer.cege.ucl.ac.uk:" + httpPortNumber + '/numcorrect/' + httpPortNumber;
-    numclient.open('GET', url);
-    numclient.onreadystatechange = numResponse;
-    numclient.send();
-
-}
-
-function numResponse() {
-    if (numclient.readyState == 4) {
-        var prevnum = numcorrect
-        numcorrect = JSON.parse(numclient.responseText)['num_questions'];
-        document.getElementById('numcorrect').innerHTML = numcorrect;
-    }
-}
-
-
-
 function closestFormPoint(position) {
 
     var dist = 0.005; // 5 metres
@@ -148,7 +122,7 @@ function closestFormPoint(position) {
     var userlng = position.coords.longitude;
 
 
-    formLayer.eachLayer(function (layer) {
+    formLayer.eachLayer(function(layer) {
         var distance = calculateDistance(userlat, userlng, layer.getLatLng().lat, layer.getLatLng().lng, 'K');
         if (distance < dist) {
             closestFormPoint = layer.feature.properties.id;
@@ -164,5 +138,4 @@ function closestFormPoint(position) {
         }
     });
 }
-
 
