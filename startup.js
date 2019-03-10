@@ -7,6 +7,7 @@ function startup() {
 
 function trackAndCircle() {
     loadW3HTML();
+    startMenu();
 
 }
 
