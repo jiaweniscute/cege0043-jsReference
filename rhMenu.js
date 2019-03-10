@@ -3,11 +3,10 @@ function startMenu(){
 
 }
 
-
-
 function dailypartmodal() {
     var modal = document.getElementById('dailypartmodal');
     modal.style.display = "block";
+
 
     // Get the <span> element that closes the modal
     var span = document.getElementsByClassName("close")[0];
@@ -22,6 +21,7 @@ function dailypartmodal() {
             modal.style.display = "none";
         }
     }
+
 
 }
 

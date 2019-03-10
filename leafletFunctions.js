@@ -1,15 +1,5 @@
 var client;
-var earthquakelayer;
-var mypoint;
-var mycircle;
-var mypolygon;
-var earthquakes;
-var eclient;
 
-
-
-
-var client;
 
 function getFormData() {
     console.log('getFormData called',httpPortNumber);

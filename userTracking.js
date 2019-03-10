@@ -1,4 +1,9 @@
-var userMarker
+var userMarker;
+
+var testMarkerRed = L.AwesomeMarkers.icon({
+    icon: 'play',
+    markerColor: 'black'
+});
 
 // Track position
 function trackLocation() {
@@ -13,12 +18,11 @@ function showPosition(position) {
     if (userMarker) {
         mymap.removeLayer(userMarker)
     }
-    userMarker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(mymap)
-        .bindPopup("<b>Hello!</b><br/>This is my position").openPopup();
+    userMarker = L.marker([position.coords.latitude, position.coords.longitude], {icon: testMarkerRed}).addTo(mymap)
+        .bindPopup("Your Position");
 
-    mymap.setView([position.coords.latitude, position.coords.longitude], 10)
+    closestFormPoint(position)
 
-    getDistance()
 
 }
 
@@ -32,7 +36,7 @@ function getDistanceFromPoint(position) {
     var lat = 51.524615;
     var lng = -0.13818;
     var distance = calculateDistance(position.coords.latitude, position.coords.longitude, lat, lng, 'K');
-    if (distance <= 0.1){
+    if (distance <= 0.1) {
         alert("You are within 100m of the fixed point")
     }
 
@@ -59,17 +63,3 @@ function calculateDistance(lat1, lon1, lat2, lon2, unit) {
     return dist;
 }
 
-// calculate distance from earthquake points
-function getDistanceFromMultiplePoints(position){
-    var minDistance = 100000000000;
-    var closestQuake = "";
-    for(var i = 0; i < earthquakes.features.length; i++){
-        var obj = earthquakes.features[i];
-        var distance = calculateDistance(position.coords.latitude, position.coords.longitude, obj.geometry.coordinates[0],obj.geometry.coordinates[1], 'K');
-        if (distance < minDistance){
-            minDistance = distance;
-            closestQuake = obj.properties.place;
-        }
-    }
-    alert("Earthquake: " + closestQuake + " is distance " + Math.round(minDistance) + " away");
-}

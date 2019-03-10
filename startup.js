@@ -2,10 +2,14 @@ function startup() {
 
     getPort();
 
+
 }
 
 
 function trackAndCircle() {
+    getFormData();
+    trackLocation();
+    startMenu();
     loadW3HTML();
     startMenu();
 
