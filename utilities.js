@@ -20,7 +20,6 @@ function getPort() {
 
 
     xhr.send();
-
 }
 
 

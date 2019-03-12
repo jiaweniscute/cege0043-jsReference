@@ -8,7 +8,6 @@ function startMenu() {
 var numclient;
 var numcorrect;
 
-//
 function getNumCorrect() {
     numclient = new XMLHttpRequest();
     var url = "http://developer.cege.ucl.ac.uk:" + httpPortNumber + '/numcorrect/' + httpPortNumber;
@@ -25,7 +24,6 @@ function numResponse() {
         document.getElementById('numcorrect').innerHTML = numcorrect;
     }
 }
-
 
 // Get Individual Ranking
 var rankClient;
@@ -67,24 +65,27 @@ function rankFiveResponse() {
     }
 }
 
-
 function rankModal() {
-    console.log('rankModal function activated')
     var modal = document.getElementById('rankModal');
-    modal.style.display = "block";
-    console.log('rankModel is already out')
+    modal.style.display = "flex";
+    var modal_overlay = document.getElementById('modal-overlay');
+    modal_overlay.style.display = "flex";
 
     // Get the <span> element that closes the modal
     var span = document.getElementsByClassName("close")[0];
 
     span.onclick = function () {
         modal.style.display = "none";
+        modal_overlay.style.display = "none";
+
     };
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
-        if (event.target == modal) {
+        if (event.target == modal_overlay) {
             modal.style.display = "none";
+            modal_overlay.style.display = "none";
+
         }
     }
 
@@ -143,3 +144,36 @@ function plotRankGraph(raw) {
 
 }
 
+// help modal
+function helpModal() {
+    var modal = document.getElementById('helpModal');
+    modal.style.display = "flex";
+    var modal_overlay = document.getElementById('modal-overlay');
+    modal_overlay.style.display = "flex";
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[1];
+
+    span.onclick = function () {
+        modal.style.display = "none";
+        modal_overlay.style.display = "none";
+
+    };
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal_overlay) {
+            modal.style.display = "none";
+            modal_overlay.style.display = "none";
+
+        }
+    };
+
+    document.getElementById('helpModalContent').innerHTML =
+        '<b>Aim of the game</b><br>Walk within 20m of any question point to trigger it. Touch the question point if it is not triggered.<br>Answer them right and win points.<br><br>' +
+        '<b>Marker Colours</b><br>Black: Your position<br>Blue: Your Question Points<br>Red: Incorrectly Answered Questions<br>Green: Correctly Answered Questions<br>Pink: Question Points Set by Other Users' +
+        '<br><br><b>Navigation Bar</b><br>Top 5 Rankings: See the top 5 players in the game<br><br>' +
+        'Show/Hide 5 Closest Questions: See the closest 5 questions from your location (includes question points from other users). You will be able to attempt these questions<br><br>' +
+        'Show/Hide Last 5 Questions: See the last 5 questions you attempted. You can only view these questions and not answer them.<br><br>' +
+        'Show/Hide Incorrectly Answered Questions Only: See the questions you have answered incorrectly. You can only view these questions and not answer them.'
+}

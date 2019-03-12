@@ -1,6 +1,6 @@
 var userMarker;
 
-var testMarkerRed = L.AwesomeMarkers.icon({
+var testMarkerBlack = L.AwesomeMarkers.icon({
     icon: 'play',
     markerColor: 'black'
 });
@@ -18,29 +18,14 @@ function showPosition(position) {
     if (userMarker) {
         mymap.removeLayer(userMarker)
     }
-    userMarker = L.marker([position.coords.latitude, position.coords.longitude], {icon: testMarkerRed}).addTo(mymap)
+    userMarker = L.marker([position.coords.latitude, position.coords.longitude], {icon: testMarkerBlack}).addTo(mymap)
         .bindPopup("Your Position");
 
+    mymap.setView([position.coords.latitude, position.coords.longitude], 18);
+
     closestFormPoint(position)
-
-
 }
 
-// Track Distance
-
-function getDistance() {
-    navigator.geolocation.getCurrentPosition(getDistanceFromMultiplePoints);
-}
-
-function getDistanceFromPoint(position) {
-    var lat = 51.524615;
-    var lng = -0.13818;
-    var distance = calculateDistance(position.coords.latitude, position.coords.longitude, lat, lng, 'K');
-    if (distance <= 0.1) {
-        alert("You are within 100m of the fixed point")
-    }
-
-}
 
 // calculate distance given two sets of coordinates
 function calculateDistance(lat1, lon1, lat2, lon2, unit) {
