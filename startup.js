@@ -2,7 +2,6 @@ function startup() {
     getPort();
 }
 
-
 function trackAndCircle() {
     getFormData();
     trackLocation();
