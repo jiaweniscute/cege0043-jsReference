@@ -1,20 +1,11 @@
 function startup() {
-
     getPort();
 
-
 }
 
-
-function trackAndCircle() {
-    getFormData();
-    trackLocation();
-    startMenu();
-    loadW3HTML();
-    startMenu();
-
-}
-
-function loadW3HTML() {
+function initFunctions() {
+    initLeaflet();
+    initMenu();
     w3.includeHTML();
 }
+

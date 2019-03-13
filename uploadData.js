@@ -1,3 +1,4 @@
+// submits question form onclick
 function startDataUpload() {
     var question_title = document.getElementById("question_title").value;
     var question_text = document.getElementById("question_text").value;
@@ -14,7 +15,7 @@ function startDataUpload() {
 
     var all_answers = [question_title, question_text, answer_1, answer_2, answer_3, answer_4, correct_answer, latitude, longitude];
 
-    correct_answer_integer = Number(correct_answer);
+    var correct_answer_integer = Number(correct_answer);
 
     // check correct answer field, if pass, check if all fields are filled
     if (correct_answer_integer == 1 || correct_answer_integer == 2 || correct_answer_integer == 3 || correct_answer_integer == 4) {
@@ -25,7 +26,7 @@ function startDataUpload() {
             }
         }
         if (count > 0) {
-            document.getElementById("dataUploadResult").innerHTML = 'Error: Some fields are empty. ';
+            document.getElementById("dataUploadResult").innerHTML = '<i>Error: Some fields are empty.</i>';
         }
         else {
             processData(postString);
@@ -33,7 +34,7 @@ function startDataUpload() {
 
     }
     else {
-        document.getElementById("dataUploadResult").innerHTML = 'Error: Correct Answer Field must be an integer. '
+        document.getElementById("dataUploadResult").innerHTML = '<i>Error: Correct Answer Field must be an integer.</i>'
         console.log('not 1-4')
     }
 }
@@ -58,7 +59,9 @@ function dataUploaded() {
         // change the DIV to show the response
         document.getElementById("dataUploadResult").innerHTML = 'Question added successfully.';
     }
-
+    console.log('calling get form data');
+    getFormData();
+    console.log('get form data called. map should be refreshed')
 }
 
 
